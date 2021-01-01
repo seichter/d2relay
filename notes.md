@@ -12,7 +12,6 @@ Goal of this tool should be a console output that can be easily being parsed. Me
 
 The following items can be found:
 
-
 ```
 [FD:8B:B0:50:BA:A3] Connected
 [FD:8B:B0:50:BA:A3] Resolved services
@@ -31,6 +30,20 @@ The following items can be found:
 [FD:8B:B0:50:BA:A3]    Characteristic [00002a05-0000-1000-8000-00805f9b34fb]
 [FD:8B:B0:50:BA:A3] Disconnected
 ```
+
+UUID                                     Meaning                    Coding    Value on D2
+--------------------------------------   -------------------------  ------    -----------
+`00002a29-0000-1000-8000-00805f9b34fb`   Manufacturer Name String   char      `nRF51822`
+`00002a1a-0000-1000-8000-00805f9b34fb`   Battery Power State        byte      `0`
+`00002a19-0000-1000-8000-00805f9b34fb`   Battery Level                        `0`
+`3ab1010c-f831-4395-b29d-570977d5bf94`   *Leica Specific*                     `D2      `
+`3ab1010a-f831-4395-b29d-570977d5bf94`   *Unknown*                       
+`3ab10101-f831-4395-b29d-570977d5bf94`   *Measurement*              float     
+`3ab10102-f831-4395-b29d-570977d5bf94`   *Units* ?
+--------------------------------------   -------------------------  ------    -----------
+
+
+
 
 If a new measurement appears on the display, characteristic `3ab10102-f831-4395-b29d-570977d5bf94` is changed
 
@@ -67,6 +80,8 @@ The value in `3ab10102-f831-4395-b29d-570977d5bf94` is presumably the units asso
 
 ## Post Mortem
 
+This is just a post mortem for the initial release on January 1st 2021. 
+
 The Bluetooth stack on Linux (bluez 5.55) keeps constantly crashing. Reverse engineering this protocoll is a reboot fest. The connection is really flakey but I think this is mainly a Linux BLE issue.
 
-
+Decodings can be found on: https://www.bluetooth.com/specifications/assigned-numbers/format-types/
