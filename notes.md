@@ -31,15 +31,15 @@ The following items can be found:
 [FD:8B:B0:50:BA:A3] Disconnected
 ```
 
-| UUID | Meaning | Coding| Value on D2 | 
-| ------------------------------------ | ------------------------ | ------ | ----------- |
-`00002a29-0000-1000-8000-00805f9b34fb` |  Manufacturer Name String| char   |  `nRF51822` |
-`00002a1a-0000-1000-8000-00805f9b34fb` |  Battery Power State     | byte   |  `0`        |
-`00002a19-0000-1000-8000-00805f9b34fb` |  Battery Level           |        |  `0`        |
-`3ab1010c-f831-4395-b29d-570977d5bf94` |  *Leica Specific*        | cstr   |  `D2      ` |
-`3ab1010a-f831-4395-b29d-570977d5bf94` |  *Unknown*               |        |             | 
-`3ab10101-f831-4395-b29d-570977d5bf94` |  *Measurement*           | float  |             |
-`3ab10102-f831-4395-b29d-570977d5bf94` |  *Units* ?               |        |             |
+| UUID                                 | Meaning                  | Size | Coding | Value on D2 | 
+| ------------------------------------ | ------------------------ | ---- | ------ | ----------- |
+`00002a29-0000-1000-8000-00805f9b34fb` |  Manufacturer Name String| 8    | char   |  `nRF51822` |
+`00002a1a-0000-1000-8000-00805f9b34fb` |  Battery Power State     | 1    | byte   |  `0`        |
+`00002a19-0000-1000-8000-00805f9b34fb` |  Battery Level           | 1    |        |  `0`        |
+`3ab1010c-f831-4395-b29d-570977d5bf94` |  *Leica Specific*        | 8    | cstr   |  `D2      ` |
+`3ab1010a-f831-4395-b29d-570977d5bf94` |  *Unknown*               | 4    |        |             | 
+`3ab10101-f831-4395-b29d-570977d5bf94` |  *Measurement*           | 4    | float  |             |
+`3ab10102-f831-4395-b29d-570977d5bf94` |  *Units* ?               | 2    |        |             |
 
 
 
