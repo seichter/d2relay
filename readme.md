@@ -12,6 +12,8 @@ D2 Relay is a small tool to relay measurements of a Leica Disto D2 Device to the
 
 ## Todo
 
+Plenty of hints can be found int [Notes](./notes.md)
+
 * [ ] Infer correct units
 * [ ] Detect error states such as 255 (too close)
 * [ ] Make things configurable by using command line parameters 
