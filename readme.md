@@ -1,6 +1,6 @@
 # D2Relay
 
-D2 Relay is a small tool to relay measurements of a Leica DISTO&trade; D2 device to the console. This tool is developed and tested only on Linux.
+D2 Relay is a small tool to relay measurements of a [Leica DISTO&trade; D2](https://shop.leica-geosystems.com/buy/disto/d2) device to the console. This tool is developed and tested only on Linux.
 
 &copy; Copyrights 2021 Hartmut Seichter 
 
