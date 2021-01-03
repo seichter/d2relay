@@ -77,6 +77,12 @@ the preset units (m in my case). The four byte value is a simple IEEE754 `float`
 The value in `3ab10102-f831-4395-b29d-570977d5bf94` is presumably the units associated with the measurement. The coding needs to be figured out later. Once I have read the manual to change to other settings.
 
 
+## Ideas
+
+* just push the data onto the clipboard: `$ echo 5.55m | xclip`
+* integrate into Blender (BlenderBIM?) and FreeCAD
+
+
 ## Post Mortem
 
 This is just a post mortem for the initial release on January 1st 2021. 

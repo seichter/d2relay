@@ -1,6 +1,6 @@
 # D2Relay
 
-D2 Relay is a small tool to relay measurements of a Leica DISTO&trade; D2 device to the console. This tool is developed and tested only on Linux.
+D2 Relay is a small tool to relay measurements of a Leica DISTO&trade; D2 device to the console. This tool is **Linux only** due to its dependency on `python-gatt`. 
 
 &copy; Copyrights 2021 Hartmut Seichter 
 
@@ -11,6 +11,14 @@ You need to install `gatt` integration for python. To do so only for your user a
 ```
 $ pip install --user gatt
 ```
+
+## Collaboration
+
+There are many ways to collaborate, please open an issue or a pull request. Some ideas:
+
+* separate `python-gatt` from the tool itself to support Windows, Mac or any other platform
+* create a proper d2relay module to encapsulate the functionality
+* support other Leica BLE devices
 
 
 ## Screenshot
