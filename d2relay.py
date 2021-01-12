@@ -9,94 +9,89 @@ Distributed under the terms of the MIT License
 
 """
 
-import gatt
+
+MODEL_NUMBER_UUID = "00002a24-0000-1000-8000-00805f9b34fb"
+MANUFACTURER_UUID = "00002a29-0000-1000-8000-00805f9b34fb"
+MEASUREMENT_UUID  = "3ab10101-f831-4395-b29d-570977d5bf94"
+
+d2_mac_address = "FD:8B:B0:50:BA:A3"
+
+import logging
+import asyncio
+import platform
+
 import struct
 
-debug_mode = False
-keepalive_hack = True
+import asyncio
+
+from bleak import BleakScanner
+from bleak import BleakClient
+from bleak import _logger as logger
 
 
-class DISTOManager(gatt.DeviceManager):
-    def __init__(self, adapter_name):
-        super().__init__(adapter_name)
+CHARACTERISTIC_UUID = MEASUREMENT_UUID
 
 
-    def run(self):
-        super().run()
+def report_measurement(value):
+    float_val = struct.unpack('f',value)[0]
+    print(round(float_val,3),'m')
 
-    def on_idle(self):
-        pass
+def notification_handler(sender, data):
+    """Simple notification handler which prints the data received."""
+    # print("{0}: {1}".format(sender, data))
+    report_measurement(data)
 
-class DISTO(gatt.Device):
-    def connect_succeeded(self):
-        super().connect_succeeded()
-        print("[%s] Connected" % (self.mac_address))
 
-    def connect_failed(self, error):
-        super().connect_failed(error)
-        print("[%s] Connection failed: %s" % (self.mac_address, str(error)))
+async def run(address, debug=False):
+    if debug:
+        import sys
 
-    def disconnect_succeeded(self):
-        super().disconnect_succeeded()
-        print("[%s] Disconnected" % (self.mac_address))
-        # aweful hack to keep the DISTO from disconnecting
-        # this will drain your distos battery!
-        if keepalive_hack:
-            self.connect() 
+        l = logging.getLogger("asyncio")
+        l.setLevel(logging.DEBUG)
+        h = logging.StreamHandler(sys.stdout)
+        h.setLevel(logging.DEBUG)
+        l.addHandler(h)
+        logger.addHandler(h)
 
-    def services_resolved(self):
-        super().services_resolved()
+    async with BleakClient(address) as client:
+        x = await client.is_connected()
+        logger.info("Connected: {0}".format(x))
 
-        if debug_mode:
-            print("[%s] Resolved services" % (self.mac_address))
-        for service in self.services:
-            if debug_mode:
-                print("[%s]  Service [%s]" % (self.mac_address, service.uuid))
-            for characteristic in service.characteristics:
-                if debug_mode:
-                    print("[%s]    Characteristic [%s]" % (self.mac_address, characteristic.uuid))
+        # await client.start_notify(CHARACTERISTIC_UUID, notification_handler)
+        # await asyncio.sleep(30.0)
+        # await client.stop_notify(CHARACTERISTIC_UUID)
 
-                characteristic.read_value()
-                characteristic.enable_notifications()
+        x = input("Press")
 
-    def characteristic_value_updated(self, characteristic, value):
+        await client.start_notify(CHARACTERISTIC_UUID, notification_handler)
 
-        if debug_mode:
-            # this is here for debugging ... there many more things to implement
-            # if characteristic.uuid == '3ab10102-f831-4395-b29d-570977d5bf94':
-            print(characteristic.uuid,':',type(value),len(value)) # ,int.from_bytes(value,byteorder='big', signed=False))
-            # else:
-            #     print( characteristic.uuid, ":", value.decode("utf-8"))
-            print('\traw   :',value)
-            if len(value) == 2:
-                print("\tuint16  :",struct.unpack('>H',value)[0])
-            if len(value) == 4:
-                print("\tfloat :",struct.unpack('f',value)[0])
-            elif len(value) == 8:
-                print('\tdouble:',struct.unpack('d',value)[0])
-                
-        elif characteristic.uuid == '3ab10101-f831-4395-b29d-570977d5bf94':
-            self.report_measurement(value)
-        # Vendor ID
-        elif characteristic.uuid == '00002a29-0000-1000-8000-00805f9b34fb':
-            # for whatever reasons the D2 reports itself as the BLE SoC 
-            # thats driving it - a Nordic Semi nRF51822 - a 16MhZ Cortex-M0
-            is_leica = value.decode('utf-8') == 'nRF51822'
-        elif characteristic.uuid == '00002a1a-0000-1000-8000-00805f9b34fb':
-                print('Battery level',value)
-
+        for val_f in range(256):
+            for val_b in range(256):
         
-    
-    def report_measurement(self,value):
-        float_val = struct.unpack('f',value)[0]
-        print(round(float_val,3),'m')
+                print(val_f,val_b,'start')
+
+                data = bytearray([val_f, val_b])
+                await asyncio.wait_for(client.write_gatt_char("3ab10109-f831-4395-b29d-570977d5bf94", data),timeout=5)
+
+                print(val_f,val_b,'end')
+
+        await asyncio.sleep(5.0)
+
+        await client.stop_notify(CHARACTERISTIC_UUID)
 
 
-# note: Make it configurable
-manager = DISTOManager(adapter_name='hci0')
 
-# well this is only for the D2 but other BLE devices by Leica should
-# work similar - usually they just have more functions
-device = DISTO(mac_address= 'FD:8B:B0:50:BA:A3', manager=manager)
-device.connect()
-manager.run()
+if __name__ == "__main__":
+    import os
+
+    os.environ["PYTHONASYNCIODEBUG"] = str(1)
+    address = (
+        d2_mac_address  # <--- Change to your device's address here if you are using Windows or Linux
+        if platform.system() != "Darwin"
+        else "B9EA5233-37EF-4DD6-87A8-2A875E821C46"  # <--- Change to your device's address here if you are using macOS
+    )
+    loop = asyncio.get_event_loop()
+    # loop.set_debug(True)
+    loop.run_until_complete(run(address, True))
+
+
