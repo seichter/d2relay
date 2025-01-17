@@ -1,38 +1,64 @@
 # D2Relay
 
-D2 Relay is a small tool to relay measurements of a [Leica DISTO&trade; D2](https://shop.leica-geosystems.com/buy/disto/d2) device to the console. This tool is **Linux only** due to its dependency on `python-gatt`. 
+D2 Relay is a small tool to relay measurements of a [Leica DISTO&trade; D2](https://shop.leica-geosystems.com/buy/disto/d2) device to the console.
 
+&copy; Copyrights 2021-2025 Hartmut Seichter
 
-&copy; Copyrights 2021 Hartmut Seichter 
+## Installation
 
-## Prerequisites
+Create a `venv`
 
-You need to install `gatt` integration for python. To do so only for your user account it is sufficient to execute:
-
+```console
+[me@machine d2relay]$ python -m venv .venv
 ```
-$ pip install --user gatt
+
+Activate the venv:
+
+```console
+[me@machine d2relay]$ source .venv/bin/activate
 ```
+
+Activate the venv:
+
+```console
+(.venv) [me@machine d2relay]$ pip install -r requirements.txt
+```
+
+Check usage ...
+
+```console
+(.venv) [me@machine d2relay]$ python -m app --help
+usage: d2relay [-h] [--address ADDRESS]
+
+a tool for reading out Leica Disto D2 devices over BLE
+
+options:
+ -h, --help         show this help message and exit
+ --address ADDRESS  BLE address for Disto D2, default: FD:8B:B0:50:BA:A3
+```
+
 
 ## Collaboration
 
 There are many ways to collaborate, please open an issue or a pull request. Some ideas:
 
-* separate `python-gatt` from the tool itself to support Windows, Mac or any other platform
 * create a proper d2relay module to encapsulate the functionality
-* support other Leica BLE devices
-
+* support other Leica BLE devices (or some relabeled Bosch devices)
 
 ## Screenshot
 
 ![d2relay capturing data from the device](doc/screenshot.jpg)
 
-
 ## Todo
 
-Plenty of hints can be found in my [notes](./notes.md) while reverse engineering my device.
+Plenty of hints can be found in my [notes](./doc/notes.md) while reverse engineering my device.
 
 * [ ] Infer correct units
 * [ ] Detect error states such as 255 (too close)
-* [ ] Make things configurable by using command line parameters 
+* [x] Make things configurable by using command line parameters
 * [ ] Interactive Mode: trigger measurements over BT
 * [ ] Demonstrator with FreeCAD or the like
+
+## Copyright & License
+
+d2relay is &copy; 2021-2025 Hartmut Seichter - licenses under the terms MIT licence
